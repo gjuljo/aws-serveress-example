@@ -1,4 +1,5 @@
 import * as cdk from '@aws-cdk/core';
+import {ApplicationAPI} from './api';
 import {AppDatabase} from './database';
 import {AppService} from './services';
 import {AssetStorage} from './storage';
@@ -12,8 +13,12 @@ export class ApplicationStack extends cdk.Stack {
 
     const database = new AppDatabase(this, 'Database');
 
-    new AppService(this, 'Services', {
+    const services = new AppService(this, 'Services', {
       documentsTable: database.documentsTable,
+    });
+
+    new ApplicationAPI(this, 'API', {
+      commentsService: services.commentsService,
     });
 
     new WebApp(this, 'WebApp', {

@@ -7,7 +7,7 @@ import {
 } from 'lambda-micro';
 import {AWSClients, generateID} from '../common';
 
-const dynamoDB = AWSClients.dynamoDB;
+const dynamoDB = AWSClients.dynamoDB();
 const tableName = process.env.DYNAMO_DB_TABLE;
 
 const schemas = {
