@@ -3,6 +3,9 @@ import {ApplicationAPI} from './api';
 import {AppDatabase} from './database';
 import {AppService} from './services';
 import {AssetStorage} from './storage';
+import {ApplicationEvents} from './events';
+import {DocumentProcessing} from './processing';
+import {S3CloudTrail} from './cloudtrail';
 import {WebApp} from './webapp';
 
 export class ApplicationStack extends cdk.Stack {
@@ -22,6 +25,22 @@ export class ApplicationStack extends cdk.Stack {
     const api = new ApplicationAPI(this, 'API', {
       commentsService: services.commentsService,
       documentsService: services.documentsService,
+    });
+
+    const processing = new DocumentProcessing(this, 'Processing', {
+      uploadBucket: storage.uploadBucket,
+      assetBucket: storage.assetBucket,
+      documentsTable: database.documentsTable,
+    });
+
+    new S3CloudTrail(this, 'S3CloudTrail', {
+      bucketToTrackUploads: storage.uploadBucket,
+    });
+
+    new ApplicationEvents(this, 'Events', {
+      uploadBucket: storage.uploadBucket,
+      processingStateMachine: processing.processingStateMachine,
+      notificationsService: services.notificationsService,
     });
 
     new WebApp(this, 'WebApp', {

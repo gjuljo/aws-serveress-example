@@ -7,8 +7,12 @@ import {
 } from 'lambda-micro';
 import {AWSClients, generateID} from '../common';
 
+// dynamodb client
 const dynamoDB = AWSClients.dynamoDB();
 const tableName = process.env.DYNAMO_DB_TABLE;
+
+// eventbridge client
+const eventbridge = AWSClients.eventbridge();
 
 const schemas = {
     createComment: require('./schemas/createComment.json'),
@@ -51,6 +55,26 @@ const createComment = async (request, response) => {
       ReturnValues: 'NONE',
     };
     await dynamoDB.put(params).promise();
+
+    // send notification via eventbridge
+    const detail = {
+        DocumentId: request.pathVariables.docid,
+        CommentId: commentId,
+      };
+
+    const eventParams = {
+        Entries: [
+            {
+                Detail: JSON.stringify(detail),
+                DetailType: 'CommentAdded',
+                EventBusName: 'com.globomantics.dms',
+                Resources: [],
+                Source: 'com.globomantics.dms.comments',
+            },
+        ],
+    };
+    await eventbridge.putEvents(eventParams).promise();
+
     return response.output(item, 200);    
 };
 

@@ -15,12 +15,12 @@ export const getAllDocuments = async () => {
 };
 
 export const getDocument = async (id) => {
-  const document = mock.documents.find((d) => d.PK === id);
-  console.log(`[MOCK] Get Document: ${id}`);
-  return mock.mockCall(document, 1000);
-  // const { data } = await axios.get(`${SERVICES_HOST}/documents/${id}`);
-  // console.log(`Data: ${JSON.stringify(data)}`);
-  // return data;
+  // const document = mock.documents.find((d) => d.PK === id);
+  // console.log(`[MOCK] Get Document: ${id}`);
+  // return mock.mockCall(document, 1000);
+  const { data } = await axios.get(`${SERVICES_HOST}/documents/${id}`);
+  console.log(`Data: ${JSON.stringify(data)}`);
+  return data;
 };
 
 export const deleteDocument = async (id) => {

@@ -3986,6 +3986,20 @@
     "mkdirp" "^1.0.4"
     "rimraf" "^3.0.2"
 
+"@pdf-lib/standard-fonts@^1.0.0":
+  "integrity" "sha512-hU30BK9IUN/su0Mn9VdlVKsWBS6GyhVfqjwl1FjZN4TxP6cCw0jP2w7V3Hf5uX7M0AZJ16vey9yE0ny7Sa59ZA=="
+  "resolved" "https://registry.npmjs.org/@pdf-lib/standard-fonts/-/standard-fonts-1.0.0.tgz"
+  "version" "1.0.0"
+  dependencies:
+    "pako" "^1.0.6"
+
+"@pdf-lib/upng@^1.0.1":
+  "integrity" "sha512-dQK2FUMQtowVP00mtIksrlZhdFXQZPC+taih1q4CvPZ5vqdxR/LKBaFg0oAfzd1GlHZXXSPdQfzQnt+ViGvEIQ=="
+  "resolved" "https://registry.npmjs.org/@pdf-lib/upng/-/upng-1.0.1.tgz"
+  "version" "1.0.1"
+  dependencies:
+    "pako" "^1.0.10"
+
 "@pmmmwh/react-refresh-webpack-plugin@0.4.3":
   "integrity" "sha512-br5Qwvh8D2OQqSXpd1g/xqXKnK0r+Jz6qVKBbWmpUcrbGOxUrf39V5oZ1876084CGn18uMdR5uvPqBv9UqtBjQ=="
   "resolved" "https://registry.npmjs.org/@pmmmwh/react-refresh-webpack-plugin/-/react-refresh-webpack-plugin-0.4.3.tgz"
@@ -4000,6 +4014,12 @@
 
 "@ps-serverless/comments-service@file:/home/giulio/serverless/ps-serverless-app/services/comments":
   "resolved" "file:services/comments"
+  "version" "1.0.0"
+  dependencies:
+    "lambda-micro" "1.0.1"
+
+"@ps-serverless/documents-service@file:/home/giulio/serverless/ps-serverless-app/services/documents":
+  "resolved" "file:services/documents"
   "version" "1.0.0"
   dependencies:
     "lambda-micro" "1.0.1"
@@ -4084,6 +4104,13 @@
     "cdk-webapp-tools" "1.100.12"
     "constructs" "^3.3.69"
     "source-map-support" "^0.5.16"
+
+"@ps-serverless/processing-service@file:/home/giulio/serverless/ps-serverless-app/services/processing":
+  "resolved" "file:services/processing"
+  "version" "1.0.0"
+  dependencies:
+    "lambda-micro" "1.0.1"
+    "pdf-lib" "^1.16.0"
 
 "@ps-serverless/services-common@file:/home/giulio/serverless/ps-serverless-app/services/common":
   "resolved" "file:services/common"
@@ -12497,7 +12524,7 @@
   "resolved" "https://registry.npmjs.org/paho-mqtt/-/paho-mqtt-1.1.0.tgz"
   "version" "1.1.0"
 
-"pako@~1.0.5":
+"pako@^1.0.10", "pako@^1.0.11", "pako@^1.0.6", "pako@~1.0.5":
   "integrity" "sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw=="
   "resolved" "https://registry.npmjs.org/pako/-/pako-1.0.11.tgz"
   "version" "1.0.11"
@@ -12669,6 +12696,16 @@
     "ripemd160" "^2.0.1"
     "safe-buffer" "^5.0.1"
     "sha.js" "^2.4.8"
+
+"pdf-lib@^1.16.0":
+  "integrity" "sha512-V/mpyJAoTsN4cnP31vc0wfNA1+p20evqqnap0KLoRUN0Yk/p3wN52DOEsL4oBFcLdb76hlpKPtzJIgo67j/XLw=="
+  "resolved" "https://registry.npmjs.org/pdf-lib/-/pdf-lib-1.17.1.tgz"
+  "version" "1.17.1"
+  dependencies:
+    "@pdf-lib/standard-fonts" "^1.0.0"
+    "@pdf-lib/upng" "^1.0.1"
+    "pako" "^1.0.11"
+    "tslib" "^1.11.1"
 
 "performance-now@^2.1.0":
   "integrity" "sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns="
