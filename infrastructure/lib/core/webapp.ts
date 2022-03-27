@@ -3,6 +3,7 @@ import * as s3 from '@aws-cdk/aws-s3';
 import * as s3Deploy from '@aws-cdk/aws-s3-deployment';
 import * as cloudfront from '@aws-cdk/aws-cloudfront';
 import * as apigw from '@aws-cdk/aws-apigatewayv2';
+import * as cognito from '@aws-cdk/aws-cognito';
 import * as cwt from 'cdk-webapp-tools';
 import { execSync } from 'child_process';
 import * as path from 'path';
@@ -12,6 +13,8 @@ interface WebAppProps {
     relativeWebAppPath: string;
     baseDirectory: string;
     httpApi: apigw.IHttpApi;
+    userPool: cognito.IUserPool;
+    userPoolClient: cognito.IUserPoolClient;    
 }
 
 export class WebApp extends cdk.Construct {
@@ -77,6 +80,8 @@ export class WebApp extends cdk.Construct {
             key: 'config.js',
             configData: {
                 apiEndpoint: props.httpApi.apiEndpoint,
+                userPoolId: props.userPool.userPoolId,
+                userPoolWebClientId: props.userPoolClient.userPoolClientId,
             },
             globalVariableName: 'appConfig',
         }).node.addDependency(deployment);
