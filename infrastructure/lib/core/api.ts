@@ -5,10 +5,14 @@ import {CorsHttpMethod, HttpMethod} from '@aws-cdk/aws-apigatewayv2';
 import * as apigi from '@aws-cdk/aws-apigatewayv2-integrations';
 import * as iam from '@aws-cdk/aws-iam';
 import * as sqs from '@aws-cdk/aws-sqs';
+import * as cognito from '@aws-cdk/aws-cognito';
+import { HttpUserPoolAuthorizer } from '@aws-cdk/aws-apigatewayv2-authorizers';
 
 interface ApplicationApiProps {
     commentsService: lambda.IFunction;
     documentsService: lambda.IFunction;
+    userPool: cognito.IUserPool;
+    userPoolClient: cognito.IUserPoolClient;
 }
 
 export class ApplicationAPI extends cdk.Construct {
@@ -44,6 +48,12 @@ export class ApplicationAPI extends cdk.Construct {
             },
         });
 
+        // authorizer
+        const authorizer = new HttpUserPoolAuthorizer({
+            userPool: props.userPool,
+            userPoolClient: props.userPoolClient,
+        });        
+
         // connect to the comments service lambda
         const commentsServiceIntegration = new apigi.LambdaProxyIntegration({
             handler: props.commentsService,
@@ -53,6 +63,7 @@ export class ApplicationAPI extends cdk.Construct {
             path: `/comments/{proxy+}`,
             methods: serviceMethods,
             integration: commentsServiceIntegration,
+            authorizer: authorizer,
         });
 
         // connect to the documents service lambda
@@ -64,6 +75,7 @@ export class ApplicationAPI extends cdk.Construct {
             path: `/documents/{proxy+}`,
             methods: serviceMethods,
             integration: documentsServiceIntegration,
+            authorizer: authorizer,
         });
 
         // moderate sqs
