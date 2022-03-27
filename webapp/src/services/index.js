@@ -81,8 +81,12 @@ export const getCommentsForDocument = async (id) => {
 };
 
 export const reportCommentForModeration = async (id) => {
-  console.log(`[MOCK] Report comment for moderation ${id}`);
-  return mock.mockCall({}, 1000);
+  // console.log(`[MOCK] Report comment for moderation ${id}`);
+  // return mock.mockCall({}, 1000);
+  const body = {
+    CommentId: id,
+  };
+  await axios.post(`${SERVICES_HOST}/moderate`, body);
 };
 
 /* eslint-enable no-console */
