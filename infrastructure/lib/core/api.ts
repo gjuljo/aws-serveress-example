@@ -8,6 +8,7 @@ import * as sqs from '@aws-cdk/aws-sqs';
 
 interface ApplicationApiProps {
     commentsService: lambda.IFunction;
+    documentsService: lambda.IFunction;
 }
 
 export class ApplicationAPI extends cdk.Construct {
@@ -43,7 +44,7 @@ export class ApplicationAPI extends cdk.Construct {
             },
         });
 
-        // connect to the lambda
+        // connect to the comments service lambda
         const commentsServiceIntegration = new apigi.LambdaProxyIntegration({
             handler: props.commentsService,
         });
@@ -54,8 +55,18 @@ export class ApplicationAPI extends cdk.Construct {
             integration: commentsServiceIntegration,
         });
 
-        // moderate sqs
+        // connect to the documents service lambda
+        const documentsServiceIntegration = new apigi.LambdaProxyIntegration({
+            handler: props.documentsService,
+        });
 
+        this.httpApi.addRoutes({
+            path: `/documents/{proxy+}`,
+            methods: serviceMethods,
+            integration: documentsServiceIntegration,
+        });
+
+        // moderate sqs
         const queue = new sqs.Queue(this, 'ModerationQueue');
 
         const moderateRole = new iam.Role(this, 'ModerateRole', {
