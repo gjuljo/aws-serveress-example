@@ -4,6 +4,7 @@ import * as dynamodb from '@aws-cdk/aws-dynamodb';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as ssm from '@aws-cdk/aws-ssm';
 import * as iam from '@aws-cdk/aws-iam';
+import * as congito from '@aws-cdk/aws-cognito';
 import {NodejsFunction} from '@aws-cdk/aws-lambda-nodejs';
 import {NodejsServiceFunction} from '../constructs/lambda';
 
@@ -11,6 +12,7 @@ interface AppServiceProps {
     documentsTable: dynamodb.Table,
     uploadBucket: s3.IBucket;
     assetBucket: s3.IBucket;
+    userPool: congito.IUserPool;
 }
 
 export class AppService extends cdk.Construct {
@@ -20,6 +22,8 @@ export class AppService extends cdk.Construct {
     public readonly documentsService: NodejsFunction;
 
     public readonly notificationsService: NodejsFunction;
+
+    public readonly usersService: NodejsFunction;
 
     constructor(scope: cdk.Construct, id: string, props: AppServiceProps) {
         super(scope,id);
@@ -72,6 +76,22 @@ export class AppService extends cdk.Construct {
         this.notificationsService.addEnvironment(
             'EMAIL_ADDRESS',
             ssm.StringParameter.valueForStringParameter(this, 'dms-globomantics-email'),
+        );
+
+        // users service
+        this.usersService = new NodejsServiceFunction(this, 'UsersServiceLambda', {
+            entry: path.join(__dirname, '../../../services/users/index.js'),
+        });
+  
+        this.usersService.addEnvironment('USER_POOL_ID', props.userPool.userPoolId);
+        this.usersService.addEnvironment('ASSET_BUCKET', props.assetBucket.bucketName);
+        props.assetBucket.grantReadWrite(this.usersService);
+    
+        this.usersService.addToRolePolicy(
+            new iam.PolicyStatement({
+            resources: [props.userPool.userPoolArn],
+            actions: ['cognito-idp:*'],
+            }),
         );
     }
 }

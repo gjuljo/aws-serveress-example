@@ -23,11 +23,13 @@ export class ApplicationStack extends cdk.Stack {
       documentsTable: database.documentsTable,
       uploadBucket: storage.uploadBucket,
       assetBucket: storage.assetBucket,
+      userPool: auth.userPool,
     });
 
     const api = new ApplicationAPI(this, 'API', {
       commentsService: services.commentsService,
       documentsService: services.documentsService,
+      usersService: services.usersService,
       userPool: auth.userPool,
       userPoolClient: auth.userPoolClient,
     });
