@@ -17,7 +17,7 @@ export class ApplicationStack extends cdk.Stack {
       documentsTable: database.documentsTable,
     });
 
-    new ApplicationAPI(this, 'API', {
+    const api = new ApplicationAPI(this, 'API', {
       commentsService: services.commentsService,
     });
 
@@ -25,6 +25,7 @@ export class ApplicationStack extends cdk.Stack {
       hostingBucket: storage.hostingBucket,
       baseDirectory: '../',
       relativeWebAppPath: 'webapp',
+      httpApi: api.httpApi,
     })
    }
 }
