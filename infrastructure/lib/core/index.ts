@@ -7,6 +7,7 @@ import {ApplicationEvents} from './events';
 import {DocumentProcessing} from './processing';
 import {S3CloudTrail} from './cloudtrail';
 import {ApplicationAuth} from './auth';
+import {ApplicationMonitoring} from './monitoring';
 import {WebApp} from './webapp';
 
 export class ApplicationStack extends cdk.Stack {
@@ -40,6 +41,7 @@ export class ApplicationStack extends cdk.Stack {
       documentsTable: database.documentsTable,
     });
 
+    // this is needed for ApplicationEvents to work
     new S3CloudTrail(this, 'S3CloudTrail', {
       bucketToTrackUploads: storage.uploadBucket,
     });
@@ -50,13 +52,24 @@ export class ApplicationStack extends cdk.Stack {
       notificationsService: services.notificationsService,
     });
 
-    new WebApp(this, 'WebApp', {
+    const webapp = new WebApp(this, 'WebApp', {
       hostingBucket: storage.hostingBucket,
       baseDirectory: '../',
       relativeWebAppPath: 'webapp',
       httpApi: api.httpApi,
       userPool: auth.userPool,
       userPoolClient: auth.userPoolClient,
-    })
+    });
+    webapp.node.addDependency(auth);
+
+    new ApplicationMonitoring(this, 'Monitoring', {
+      api: api.httpApi,
+      table: database.documentsTable,
+      processingStateMachine: processing.processingStateMachine,
+      assetsBucket: storage.assetBucket,
+      documentsService: services.documentsService,
+      commentsService: services.commentsService,
+      usersService: services.usersService,      
+    });
    }
 }
