@@ -4105,6 +4105,12 @@
     "constructs" "^3.3.69"
     "source-map-support" "^0.5.16"
 
+"@ps-serverless/notifications-service@file:/home/giulio/serverless/ps-serverless-app/services/notifications":
+  "resolved" "file:services/notifications"
+  "version" "1.0.0"
+  dependencies:
+    "lambda-micro" "1.0.1"
+
 "@ps-serverless/processing-service@file:/home/giulio/serverless/ps-serverless-app/services/processing":
   "resolved" "file:services/processing"
   "version" "1.0.0"
@@ -4119,6 +4125,12 @@
     "aws-sdk" "^2.851.0"
     "aws-xray-sdk" "^3.2.0"
     "ksuid" "^2.0.0"
+
+"@ps-serverless/users-service@file:/home/giulio/serverless/ps-serverless-app/services/users":
+  "resolved" "file:services/users"
+  "version" "1.0.0"
+  dependencies:
+    "lambda-micro" "^1.0.0"
 
 "@ps-serverless/webapp@file:/home/giulio/serverless/ps-serverless-app/webapp":
   "resolved" "file:webapp"
@@ -11173,7 +11185,7 @@
   dependencies:
     "base-convert-int-array" "^1.0.1"
 
-"lambda-micro@1.0.1":
+"lambda-micro@^1.0.0", "lambda-micro@1.0.1":
   "integrity" "sha512-BMOJY6cT/tV+9YdVur0K+imnDEuuURsfHHYawvlSODO17xmYrjCeNiHJsDWLpZxV/XId6MZXW+btyfdlP/80GQ=="
   "resolved" "https://registry.npmjs.org/lambda-micro/-/lambda-micro-1.0.1.tgz"
   "version" "1.0.1"

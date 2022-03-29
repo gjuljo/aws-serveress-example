@@ -129,7 +129,7 @@ export class DocumentProcessing extends cdk.Construct {
       outputPath: '$.Payload',
     });
 
-  
+
     // Failure Step -------------------------------------------------------------
 
     const catchError = new NodejsServiceFunction(this, 'CatchErrorLambda', {
@@ -196,7 +196,6 @@ export class DocumentProcessing extends cdk.Construct {
     getDocumentMetadataInvoke.addCatch(catchErrorInvoke, catchProps);
     parallelProcessing.addCatch(catchErrorInvoke, catchProps);
     insertDocumentInvoke.addCatch(catchErrorInvoke, catchProps);
-   
     // Create Step Function ----------------------------------------------
 
     const stepFunctionDefinition = getDocumentMetadataInvoke

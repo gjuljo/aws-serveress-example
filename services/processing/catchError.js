@@ -1,5 +1,8 @@
 import * as path from 'path';
 import { AWSClients } from '../common';
+import {
+  getLogger,
+} from 'lambda-micro';
 
 // Get S3 Client
 const s3 = AWSClients.s3();
@@ -11,10 +14,12 @@ const eventbridge = AWSClients.eventbridge();
 const dynamoDB = AWSClients.dynamoDB();
 const tableName = process.env.DYNAMO_DB_TABLE;
 
-exports.handler = async event => {
+exports.handler = async (event, context) => {
+  const logger = getLogger(event, context);
+  logger.debug('Handling Error');
   // First function failing
   const filename =
-    Object.prototyle.hasOwnProperty.call(event, 'detail') && event.detail.requestParameters.key
+    Object.prototype.hasOwnProperty.call(event, 'detail') && event.detail.requestParameters.key
       ? event.detail.requestParameters.key
       : event.file.key;
 
@@ -46,14 +51,17 @@ exports.handler = async event => {
   };
   try {
     await dynamoDB.delete(deleteParams).promise();
+    logger.debug('Deleted document in DynamoDB');
   } catch (error) {
     console.error(`Could not delete data from database ${error}`);
   }
+
 
   // Try to delete from S3 (both buckets)
   try {
     await s3.deleteObject({ Key: filename, Bucket: process.env.UPLOAD_BUCKET }).promise();
     await s3.deleteObject({ Key: filename, Bucket: process.env.ASSET_BUCKET }).promise();
+    logger.debug('Deleted documents in S3');
   } catch (error) {
     console.info('Cannot delete file from one or more buckets.  This may not be an error.');
   }
@@ -66,6 +74,7 @@ exports.handler = async event => {
         Bucket: process.env.ASSET_BUCKET,
       })
       .promise();
+      logger.debug('Deleted thumbnail in S3');      
   } catch (error) {
     console.info(
       `Cannot delete thumbnail.  This may not be an error, as the thumbnail may not have been created yet.`,
@@ -91,4 +100,5 @@ exports.handler = async event => {
   };
 
   await eventbridge.putEvents(eventParams).promise();
+  logger.debug('Sent message to EventBridge');
 };
