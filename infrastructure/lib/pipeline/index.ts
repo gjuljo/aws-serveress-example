@@ -29,8 +29,8 @@ export class ApplicationPipelineStack extends cdk.Stack {
           jsonField: 'github_token'
         }),
         owner: 'gjuljo',
-        repo: 'ps-serverless-app',
-        branch: 'main'
+        repo: 'aws-serveress-example',
+        branch: 'develop'
       }),
       synthAction: SimpleSynthAction.standardNpmSynth({
         sourceArtifact,
